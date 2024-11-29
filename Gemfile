@@ -11,9 +11,8 @@ gem 'redis', '~> 5.2'
 gem 'sidekiq', '~> 7.2', '>= 7.2.4'
 gem 'sidekiq-scheduler', '~> 5.0', '>= 5.0.3'
 
-gem 'guard'
-gem 'guard-livereload', require: false
-
+# gem 'guard'
+# gem 'guard-livereload', require: false
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
@@ -21,4 +20,5 @@ group :development, :test do
 end
 
 group :development do
+  gem 'rubocop-rails', require: false
 end
