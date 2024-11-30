@@ -14,6 +14,14 @@ class CartsController < ApplicationController
   end
   # rubocop:enable Metrics/AbcSize
 
+  def show
+    if session[:cart_id].nil?
+      render json: { error: 'No active cart found' }, status: :not_found
+    else
+      render json: CartSerializer.new(current_cart).serialize, status: :ok
+    end
+  end
+
   private
 
   def product
