@@ -1,6 +1,10 @@
 Style/Documentation:
   Enabled: false
 
+Metrics/AbcSize:
+  Exclude:
+    - 'app/controllers/carts_controller'
+
 AllCops:
   Exclude:
     - 'bin/bundle'

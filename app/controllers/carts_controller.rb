@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class CartsController < ApplicationController
-  # rubocop:disable Metrics/AbcSize
   def create
+    current_cart = find_or_create_cart
     cart_item = current_cart.cart_items.find_or_initialize_by(product: product)
     cart_item.quantity += cart_item_params[:quantity].to_i if cart_item.persisted?
 
@@ -12,30 +12,55 @@ class CartsController < ApplicationController
       render json: { error: cart_item.errors.full_messages }, status: :unprocessable_entity
     end
   end
-  # rubocop:enable Metrics/AbcSize
 
   def show
-    if session[:cart_id].nil?
+    if current_cart.nil?
       render json: { error: 'No active cart found' }, status: :not_found
     else
       render json: CartSerializer.new(current_cart).serialize, status: :ok
     end
   end
 
+  def update
+    cart_item = current_cart.cart_items.find_by(product_id: product.id)
+
+    if update_quantity(cart_item, params[:quantity].to_i)
+      render json: CartSerializer.new(current_cart).serialize, status: :ok
+    else
+      render json: { error: cart_item.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def product
-    @product ||= Product.find(params[:product_id])
+    @product ||= Product.find(params[:product_id]) || (raise ActiveRecord::RecordNotFound, 'Product not found')
   end
 
   def current_cart
-    @current_cart ||= if session[:cart_id]
-                        Cart.find(session[:cart_id])
-                      else
-                        cart = Cart.create!(total_price: 0)
-                        session[:cart_id] = cart.id
-                        cart
-                      end
+    return unless session[:cart_id]
+
+    Cart.find(session[:cart_id])
+  end
+
+  def find_or_create_cart
+    current_cart || create_cart
+  end
+
+  def create_cart
+    cart = Cart.create!(total_price: 0)
+    session[:cart_id] = cart.id
+    cart
+  end
+
+  def update_quantity(cart_item, quantity)
+    return false unless cart_item
+
+    if quantity <= 0
+      cart_item.destroy
+    else
+      cart_item.update(quantity: quantity)
+    end
   end
 
   def cart_item_params
