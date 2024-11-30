@@ -19,6 +19,6 @@ class CartItem < ApplicationRecord
 
   def update_cart_total_price
     total = cart.cart_items.joins(:product).sum('cart_items.quantity * products.price')
-    cart.update_column(total_price: total)
+    cart.update_column(:total_price, total)
   end
 end
