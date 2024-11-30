@@ -14,20 +14,31 @@ class CartsController < ApplicationController
   end
 
   def show
-    if current_cart.nil?
-      render json: { error: 'No active cart found' }, status: :not_found
-    else
+    if current_cart
       render json: CartSerializer.new(current_cart).serialize, status: :ok
+    else
+      render json: { error: 'No active cart found' }, status: :not_found
     end
   end
 
   def update
-    cart_item = current_cart.cart_items.find_by(product_id: product.id)
+    cart_item = find_cart_item
 
     if update_quantity(cart_item, params[:quantity].to_i)
       render json: CartSerializer.new(current_cart).serialize, status: :ok
     else
       render json: { error: cart_item.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    cart_item = find_cart_item
+
+    if cart_item.nil?
+      render json: { error: 'Product not found in cart' }, status: :not_found
+    else
+      cart_item.destroy
+      render json: CartSerializer.new(current_cart).serialize, status: :ok
     end
   end
 
@@ -61,6 +72,10 @@ class CartsController < ApplicationController
     else
       cart_item.update(quantity: quantity)
     end
+  end
+
+  def find_cart_item
+    current_cart.cart_items.find_by(product_id: product.id)
   end
 
   def cart_item_params
