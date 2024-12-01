@@ -5,5 +5,10 @@ FactoryBot.define do
     total_price { 0.0 }
     active { true }
     abandoned_at { nil }
+
+    trait :abandoned do
+      active { false }
+      abandoned_at { 8.days.ago }
+    end
   end
 end

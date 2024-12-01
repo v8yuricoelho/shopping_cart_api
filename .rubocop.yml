@@ -5,6 +5,10 @@ Metrics/AbcSize:
   Exclude:
     - 'app/controllers/carts_controller.rb'
 
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/models/*' 
+
 AllCops:
   Exclude:
     - 'bin/bundle'
