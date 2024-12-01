@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 20_241_129_233_708) do
+ActiveRecord::Schema[7.1].define(version: 20_241_130_190_607) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'plpgsql'
 
@@ -30,6 +30,7 @@ ActiveRecord::Schema[7.1].define(version: 20_241_129_233_708) do
     t.decimal 'total_price', precision: 17, scale: 2
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.boolean 'active', default: true, null: false
   end
 
   create_table 'products', force: :cascade do |t|
