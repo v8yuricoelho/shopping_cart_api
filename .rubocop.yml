@@ -8,6 +8,7 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Exclude:
     - 'spec/models/*' 
+    - 'spec/requests/*'
 
 AllCops:
   Exclude:
