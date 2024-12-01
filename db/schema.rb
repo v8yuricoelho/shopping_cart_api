@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 20_241_130_190_607) do
+ActiveRecord::Schema[7.1].define(version: 20_241_201_151_712) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'plpgsql'
 
@@ -31,6 +31,7 @@ ActiveRecord::Schema[7.1].define(version: 20_241_130_190_607) do
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
     t.boolean 'active', default: true, null: false
+    t.datetime 'abandoned_at'
   end
 
   create_table 'products', force: :cascade do |t|
