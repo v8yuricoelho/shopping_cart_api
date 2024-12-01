@@ -3,7 +3,7 @@ Style/Documentation:
 
 Metrics/AbcSize:
   Exclude:
-    - 'app/controllers/carts_controller'
+    - 'app/controllers/carts_controller.rb'
 
 AllCops:
   Exclude:

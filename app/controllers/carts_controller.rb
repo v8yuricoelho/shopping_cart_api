@@ -2,12 +2,15 @@
 
 class CartsController < ApplicationController
   def create
-    current_cart = find_or_create_cart
-    cart_item = current_cart.cart_items.find_or_initialize_by(product: product)
+    cart = find_or_create_cart
+
+    return render_inactive_cart_error if cart_inactive?(cart)
+
+    cart_item = cart.cart_items.find_or_initialize_by(product: product)
     cart_item.quantity += cart_item_params[:quantity].to_i if cart_item.persisted?
 
     if cart_item.save
-      render json: CartSerializer.new(current_cart).serialize, status: :ok
+      render json: CartSerializer.new(cart).serialize, status: :ok
     else
       render json: { error: cart_item.errors.full_messages }, status: :unprocessable_entity
     end
@@ -22,10 +25,14 @@ class CartsController < ApplicationController
   end
 
   def update
+    cart = current_cart
+
+    return render_inactive_cart_error if cart_inactive?(cart)
+
     cart_item = find_cart_item
 
     if update_quantity(cart_item, params[:quantity].to_i)
-      render json: CartSerializer.new(current_cart).serialize, status: :ok
+      render json: CartSerializer.new(cart).serialize, status: :ok
     else
       render json: { error: cart_item.errors.full_messages }, status: :unprocessable_entity
     end
@@ -51,7 +58,7 @@ class CartsController < ApplicationController
   def current_cart
     return unless session[:cart_id]
 
-    Cart.find(session[:cart_id])
+    Cart.find_by(id: session[:cart_id])
   end
 
   def find_or_create_cart
@@ -75,7 +82,15 @@ class CartsController < ApplicationController
   end
 
   def find_cart_item
-    current_cart.cart_items.find_by(product_id: product.id)
+    current_cart&.cart_items&.find_by(product_id: product.id)
+  end
+
+  def cart_inactive?(cart)
+    !cart.active
+  end
+
+  def render_inactive_cart_error
+    render json: { error: 'This cart is no longer active' }, status: :unprocessable_entity
   end
 
   def cart_item_params
