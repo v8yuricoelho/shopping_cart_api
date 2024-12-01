@@ -234,6 +234,8 @@ GEM
     rufus-scheduler (3.9.2)
       fugit (~> 1.1, >= 1.11.1)
     securerandom (0.3.2)
+    shoulda-matchers (6.4.0)
+      activesupport (>= 5.2.0)
     sidekiq (7.3.6)
       connection_pool (>= 2.3.0)
       logger
@@ -269,6 +271,7 @@ DEPENDENCIES
   redis (~> 5.2)
   rspec-rails (~> 6.1.0)
   rubocop-rails
+  shoulda-matchers
   sidekiq (~> 7.2, >= 7.2.4)
   sidekiq-scheduler (~> 5.0, >= 5.0.3)
   tzinfo-data
