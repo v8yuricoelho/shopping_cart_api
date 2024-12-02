@@ -38,19 +38,24 @@ Ensure you have **Docker** and **Docker Compose** installed on your machine.
   ```bash
   git clone https://github.com/v8yuricoelho/shopping_cart_api.git
   cd shopping_cart_api
+  ```
 
 2. **Start the containers:**
   ```bash
   docker-compose up --build
+  ```
 
 3. **Access the application:**
   ```bash
   The API will be available at: http://localhost:3000
+  ```
 
 4. **Seed the database:**
   ```bash
   docker-compose exec web bin/rails db:seed
+  ```
 
 5. **Run tests:**
   ```bash
   docker-compose run test
+  ```
